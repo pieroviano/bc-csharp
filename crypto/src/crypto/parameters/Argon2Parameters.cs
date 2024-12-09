@@ -33,9 +33,9 @@ namespace Org.BouncyCastle.Crypto.Parameters
 
             private readonly int type;
 
-            private byte[] salt = Array.Empty<byte>();
-            private byte[] secret = Array.Empty<byte>();
-            private byte[] additional = Array.Empty<byte>();
+            private byte[] salt = new byte[0];
+            private byte[] secret = new byte[0];
+            private byte[] additional = new byte[0];
             private int iterations = DefaultIterations;
             private int memory = 1 << DefaultMemoryCost;
             private int parallelism = DefaultParallelism;

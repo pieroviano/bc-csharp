@@ -135,7 +135,7 @@ namespace Org.BouncyCastle.Crypto.IO
                 if (count > 0)
                 {
                     if (cancellationToken.IsCancellationRequested)
-                        return Task.FromCanceled(cancellationToken);
+                        return TaskEx.FromCanceled(cancellationToken);
 
                     m_writeSigner.BlockUpdate(buffer, offset, count);
                 }

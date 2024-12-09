@@ -79,14 +79,14 @@ namespace Org.BouncyCastle.Crypto.Generators
             byte[] D = new byte[v];
             Arrays.Fill(D, idByte);
 
-            byte[] S = Array.Empty<byte>();
+            byte[] S = new byte[0];
             if (!Arrays.IsNullOrEmpty(mSalt))
             {
                 S = new byte[v * ((mSalt.Length + v - 1) / v)];
                 RepeatFill(mSalt, S);
             }
 
-            byte[] P = Array.Empty<byte>();
+            byte[] P = new byte[0];
             if (!Arrays.IsNullOrEmpty(mPassword))
             {
                 P = new byte[v * ((mPassword.Length + v - 1) / v)];

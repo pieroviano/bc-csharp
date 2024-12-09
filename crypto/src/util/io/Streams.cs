@@ -240,10 +240,10 @@ namespace Org.BouncyCastle.Utilities.IO
             CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
-                return Task.FromCanceled(cancellationToken);
+                return TaskEx.FromCanceled(cancellationToken);
 
             destination.Write(buffer, offset, count);
-            return Task.CompletedTask;
+            return TaskEx.CompletedTask;
         }
 #endif
 

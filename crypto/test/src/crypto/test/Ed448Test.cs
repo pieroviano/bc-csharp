@@ -1232,7 +1232,7 @@ namespace Org.BouncyCastle.Crypto.Tests
                         + " derived=" + Hex.ToHexString(pubDerived.GetEncoded()));
                 }
 
-                Ed448Signer signer = new Ed448Signer(Array.Empty<byte>());
+                Ed448Signer signer = new Ed448Signer(new byte[0]);
                 signer.Init(true, priv);
                 signer.BlockUpdate(msg, 0, msg.Length);
                 byte[] sigDerived = signer.GenerateSignature();

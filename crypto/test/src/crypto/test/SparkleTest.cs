@@ -397,7 +397,7 @@ namespace Org.BouncyCastle.Crypto.Tests
             int offset;
             byte[] k = new byte[keysize];
             byte[] iv = new byte[ivsize];
-            byte[] m = Array.Empty<byte>();
+            byte[] m = new byte[0];
             var param = new ParametersWithIV(new KeyParameter(k), iv);
             try
             {

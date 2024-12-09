@@ -187,7 +187,7 @@ namespace Org.BouncyCastle.Asn1.X509
 
         // TODO[api] Don't convert null to empty array
 		public CrlEntry[] GetRevokedCertificates() =>
-            m_revokedCertificates?.MapElements(CrlEntry.GetInstance) ?? Array.Empty<CrlEntry>();
+            m_revokedCertificates?.MapElements(CrlEntry.GetInstance) ?? new CrlEntry[0];
 
 		public IEnumerable<CrlEntry> GetRevokedCertificateEnumeration()
 		{

@@ -73,7 +73,7 @@ namespace Org.BouncyCastle.Crypto.Signers
                 m_engine = GetEngine(m_publicKey.Parameters);
             }
 
-            m_buffer.Init(context: providedContext ?? Array.Empty<byte>(), m_preHashOidEncoding);
+            m_buffer.Init(context: providedContext ?? new byte[0], m_preHashOidEncoding);
         }
 
         public void Update(byte input)

@@ -103,7 +103,7 @@ namespace Org.BouncyCastle.Asn1.X509
             case ValueUtf8:
                 return m_values.MapElements(DerUtf8String.GetInstance);
             default:
-                return Array.Empty<object>();
+                return new object[0];
             }
         }
 

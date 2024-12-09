@@ -32,7 +32,7 @@ namespace Org.BouncyCastle.Crypto.Digests
         private bool m_squeezing = false;
 
         public AsconCXof128()
-            : this(Array.Empty<byte>())
+            : this(new byte[0])
         {
         }
 

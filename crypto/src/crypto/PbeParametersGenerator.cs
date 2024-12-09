@@ -83,7 +83,7 @@ namespace Org.BouncyCastle.Crypto
         public static byte[] Pkcs5PasswordToBytes(char[] password)
         {
             if (password == null || password.Length < 1)
-                return Array.Empty<byte>();
+                return new byte[0];
 
             return Strings.ToByteArray(password);
         }
@@ -98,7 +98,7 @@ namespace Org.BouncyCastle.Crypto
         public static byte[] Pkcs5PasswordToUtf8Bytes(char[] password)
         {
             if (password == null || password.Length < 1)
-                return Array.Empty<byte>();
+                return new byte[0];
 
             return Strings.ToUtf8ByteArray(password);
         }
@@ -122,7 +122,7 @@ namespace Org.BouncyCastle.Crypto
         public static byte[] Pkcs12PasswordToBytes(char[] password, bool wrongPkcs12Zero)
         {
             if (password == null || password.Length < 1)
-                return wrongPkcs12Zero ? new byte[2] : Array.Empty<byte>();
+                return wrongPkcs12Zero ? new byte[2] : new byte[0];
 
             // 2 pad bytes.
             byte[] bytes = new byte[Encoding.BigEndianUnicode.GetByteCount(password) + 2];
@@ -137,7 +137,7 @@ namespace Org.BouncyCastle.Crypto
         public static byte[] Pkcs12PasswordToBytes(ReadOnlySpan<char> password, bool wrongPkcs12Zero)
         {
             if (password.IsEmpty)
-                return wrongPkcs12Zero ? new byte[2] : Array.Empty<byte>();
+                return wrongPkcs12Zero ? new byte[2] : new byte[0];
 
             // 2 pad bytes.
             byte[] bytes = new byte[Encoding.BigEndianUnicode.GetByteCount(password) + 2];

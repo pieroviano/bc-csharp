@@ -8,7 +8,7 @@ namespace Org.BouncyCastle.Crypto.Utilities
     {
         internal static Asn1OctetString GetOctetString(byte[] data)
         {
-            byte[] contents = data == null ? Array.Empty<byte>() : (byte[])data.Clone();
+            byte[] contents = data == null ? new byte[0] : (byte[])data.Clone();
 
             return new DerOctetString(contents);
         }

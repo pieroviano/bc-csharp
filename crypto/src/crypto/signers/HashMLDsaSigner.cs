@@ -50,7 +50,7 @@ namespace Org.BouncyCastle.Crypto.Signers
                 parameters = withContext.Parameters;
             }
 
-            m_context = providedContext ?? Array.Empty<byte>();
+            m_context = providedContext ?? new byte[0];
 
             if (forSigning)
             {
