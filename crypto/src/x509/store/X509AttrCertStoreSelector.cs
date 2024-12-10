@@ -26,10 +26,15 @@ namespace Org.BouncyCastle.X509.Store
 		private AttributeCertificateHolder holder;
 		private AttributeCertificateIssuer issuer;
 		private BigInteger serialNumber;
+#if NET35
+        private ISet<GeneralName> targetNames = new HashSetEx<GeneralName>();
+        private ISet<GeneralName> targetGroups = new HashSetEx<GeneralName>();
+#else
 		private ISet<GeneralName> targetNames = new HashSet<GeneralName>();
 		private ISet<GeneralName> targetGroups = new HashSet<GeneralName>();
+#endif
 
-		public X509AttrCertStoreSelector()
+        public X509AttrCertStoreSelector()
 		{
 		}
 
@@ -41,16 +46,21 @@ namespace Org.BouncyCastle.X509.Store
 			this.holder = o.holder;
 			this.issuer = o.issuer;
 			this.serialNumber = o.serialNumber;
+#if NET35
+            this.targetGroups = new HashSetEx<GeneralName>(o.targetGroups);
+            this.targetNames = new HashSetEx<GeneralName>(o.targetNames);
+#else
 			this.targetGroups = new HashSet<GeneralName>(o.targetGroups);
 			this.targetNames = new HashSet<GeneralName>(o.targetNames);
-		}
+#endif
+        }
 
-		/// <summary>
-		/// Decides if the given attribute certificate should be selected.
-		/// </summary>
-		/// <param name="attrCert">The attribute certificate to be checked.</param>
-		/// <returns><code>true</code> if the object matches this selector.</returns>
-		public bool Match(X509V2AttributeCertificate attrCert)
+        /// <summary>
+        /// Decides if the given attribute certificate should be selected.
+        /// </summary>
+        /// <param name="attrCert">The attribute certificate to be checked.</param>
+        /// <returns><code>true</code> if the object matches this selector.</returns>
+        public bool Match(X509V2AttributeCertificate attrCert)
 		{
 			if (attrCert == null)
 				return false;
@@ -327,9 +337,13 @@ namespace Org.BouncyCastle.X509.Store
 
 		private ISet<GeneralName> ExtractGeneralNames(IEnumerable<object> names)
 		{
+#if NET35
+            var result = new HashSetEx<GeneralName>();
+#else
 			var result = new HashSet<GeneralName>();
+#endif
 
-			if (names != null)
+            if (names != null)
 			{
 				foreach (object o in names)
 				{

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
 
@@ -70,13 +70,21 @@ namespace Org.BouncyCastle.Asn1.Esf
 		{
 			if (crlVals != null)
 			{
-				m_crlVals = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(crlVals));
-			}
+				m_crlVals = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(crlVals
+#if NET35
+                        .Cast<Asn1Encodable>()
+#endif
+                ));
+            }
 
 			if (ocspVals != null)
 			{
-				m_ocspVals = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(ocspVals));
-			}
+				m_ocspVals = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(ocspVals
+#if NET35
+                        .Cast<Asn1Encodable>()
+#endif
+                ));
+            }
 
 			m_otherRevVals = otherRevVals;
 		}

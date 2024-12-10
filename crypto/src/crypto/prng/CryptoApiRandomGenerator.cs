@@ -82,7 +82,7 @@ namespace Org.BouncyCastle.Crypto.Prng
 
         public void Dispose()
         {
-            m_randomNumberGenerator.Dispose();
+            (m_randomNumberGenerator as IDisposable)?.Dispose();
             GC.SuppressFinalize(this);
         }
 

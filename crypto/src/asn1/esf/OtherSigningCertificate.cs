@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Org.BouncyCastle.Asn1.X509;
 
 namespace Org.BouncyCastle.Asn1.Esf
@@ -69,12 +69,20 @@ namespace Org.BouncyCastle.Asn1.Esf
 			if (certs == null)
                 throw new ArgumentNullException(nameof(certs));
 
-            m_certs = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(certs));
+            m_certs = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(certs
+#if NET35
+                    .Cast<Asn1Encodable>()
+#endif
+            ));
 
-			if (policies != null)
+            if (policies != null)
 			{
-				m_policies = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(policies));
-			}
+				m_policies = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(policies
+#if NET35
+                        .Cast<Asn1Encodable>()
+#endif
+                ));
+            }
 		}
 
 		public OtherCertID[] GetCerts() => m_certs.MapElements(OtherCertID.GetInstance);

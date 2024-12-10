@@ -75,7 +75,7 @@ namespace Org.BouncyCastle.Utilities.Collections
             return new ReadOnlyListProxy<T>(l);
         }
 
-#if NETCOREAPP1_0_OR_GREATER || NET40_OR_GREATER || NETSTANDARD1_0_OR_GREATER
+#if NETCOREAPP1_0_OR_GREATER || NET40_OR_GREATER || NET35_OR_GREATER || NETSTANDARD1_0_OR_GREATER
         public static ISet<T> ReadOnly<T>(ISet<T> s)
         {
             return new ReadOnlySetProxy<T>(s);

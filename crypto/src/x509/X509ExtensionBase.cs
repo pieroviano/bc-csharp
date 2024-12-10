@@ -12,13 +12,17 @@ namespace Org.BouncyCastle.X509
 		protected abstract X509Extensions GetX509Extensions();
 
 		protected virtual ISet<string> GetExtensionOids(bool critical)
-		{
-			X509Extensions extensions = GetX509Extensions();
+        {
+            X509Extensions extensions = GetX509Extensions();
 			if (extensions == null)
 				return null;
 
+#if NET35
+            var set = new HashSetEx<string>();
+#else
 			var set = new HashSet<string>();
-			foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
+#endif
+            foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
 			{
 				X509Extension ext = extensions.GetExtension(oid);
 				if (ext.IsCritical == critical)
@@ -27,24 +31,24 @@ namespace Org.BouncyCastle.X509
 				}
 			}
 			return set;
-		}
+        }
 
-		/// <summary>
-		/// Get non critical extensions.
-		/// </summary>
-		/// <returns>A set of non critical extension oids.</returns>
+        /// <summary>
+        /// Get non critical extensions.
+        /// </summary>
+        /// <returns>A set of non critical extension oids.</returns>
 		public virtual ISet<string> GetNonCriticalExtensionOids()
-		{
-			return GetExtensionOids(false);
-		}
+        {
+            return GetExtensionOids(false);
+        }
 
-		/// <summary>
-		/// Get any critical extensions.
-		/// </summary>
-		/// <returns>A sorted list of critical entension.</returns>
+        /// <summary>
+        /// Get any critical extensions.
+        /// </summary>
+        /// <returns>A sorted list of critical entension.</returns>
 		public virtual ISet<string> GetCriticalExtensionOids()
-		{
-			return GetExtensionOids(true);
+        {
+            return GetExtensionOids(true);
 		}
 
         public virtual X509Extension GetExtension(DerObjectIdentifier oid) =>

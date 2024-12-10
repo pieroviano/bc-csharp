@@ -17,9 +17,9 @@ namespace Org.BouncyCastle.Pkix
 		protected IList<PkixPolicyNode> mChildren;
 		protected int				mDepth;
 		protected ISet<string>		mExpectedPolicies;
-		protected PkixPolicyNode	mParent;
+        protected PkixPolicyNode	mParent;
 		protected ISet<PolicyQualifierInfo> mPolicyQualifiers;
-		protected string			mValidPolicy;
+        protected string			mValidPolicy;
 		protected bool				mCritical;
 
 		public virtual int Depth
@@ -36,14 +36,18 @@ namespace Org.BouncyCastle.Pkix
 		{
 			get { return this.mCritical; }
 			set { this.mCritical = value; }
-		}
+        }
 
 		public virtual ISet<PolicyQualifierInfo> PolicyQualifiers
-		{
-			get { return new HashSet<PolicyQualifierInfo>(this.mPolicyQualifiers); }
-		}
+        {
+#if NET35
+            get { return new HashSetEx<PolicyQualifierInfo>(this.mPolicyQualifiers); }
+#else
+            get { return new HashSet<PolicyQualifierInfo>(this.mPolicyQualifiers); }
+#endif
+        }
 
-		public virtual string ValidPolicy
+        public virtual string ValidPolicy
 		{
 			get { return this.mValidPolicy; }
 		}
@@ -51,15 +55,20 @@ namespace Org.BouncyCastle.Pkix
 		public virtual bool HasChildren
 		{
 			get { return mChildren.Count != 0; }
-		}
+        }
 
 		public virtual ISet<string> ExpectedPolicies
-		{
-			get { return new HashSet<string>(this.mExpectedPolicies); }
+        {
+#if NET35
+            get { return new HashSetEx<string>(this.mExpectedPolicies); }
+            set { this.mExpectedPolicies = new HashSetEx<string>(value); }
+#else
+            get { return new HashSet<string>(this.mExpectedPolicies); }
 			set { this.mExpectedPolicies = new HashSet<string>(value); }
-		}
+#endif
+        }
 
-		public virtual PkixPolicyNode Parent
+        public virtual PkixPolicyNode Parent
 		{
 			get { return this.mParent; }
 			set { this.mParent = value; }
@@ -70,9 +79,9 @@ namespace Org.BouncyCastle.Pkix
 			IEnumerable<PkixPolicyNode> children,
 			int				depth,
 			ISet<string>	expectedPolicies,
-			PkixPolicyNode	parent,
+            PkixPolicyNode parent,
 			ISet<PolicyQualifierInfo> policyQualifiers,
-			string			validPolicy,
+            string validPolicy,
 			bool			critical)
 		{
             if (children == null)
@@ -137,10 +146,18 @@ namespace Org.BouncyCastle.Pkix
 			PkixPolicyNode node = new PkixPolicyNode(
 				new List<PkixPolicyNode>(),
 				mDepth,
+#if NET35
+                new HashSetEx<string>(mExpectedPolicies),
+#else
 				new HashSet<string>(mExpectedPolicies),
-				null,
+#endif
+                null,
+#if NET35
+                new HashSetEx<PolicyQualifierInfo>(mPolicyQualifiers),
+#else
 				new HashSet<PolicyQualifierInfo>(mPolicyQualifiers),
-				mValidPolicy,
+#endif
+                mValidPolicy,
 				mCritical);
 
 			foreach (PkixPolicyNode child in mChildren)

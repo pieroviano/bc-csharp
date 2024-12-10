@@ -216,25 +216,29 @@ namespace Org.BouncyCastle.Cms
         public IStore<Asn1Encodable> GetOtherRevInfos(DerObjectIdentifier otherRevInfoFormat)
 		{
 			return CmsSignedHelper.GetOtherRevInfos(signedData.CRLs, otherRevInfoFormat);
-		}
+        }
 
         /**
          * Return the digest algorithm identifiers for the SignedData object
          *
          * @return the set of digest algorithm identifiers
          */
-        public ISet<AlgorithmIdentifier> GetDigestAlgorithmIDs()
+		public ISet<AlgorithmIdentifier> GetDigestAlgorithmIDs()
         {
-			var digestAlgorithms = signedData.DigestAlgorithms;
+            var digestAlgorithms = signedData.DigestAlgorithms;
 
-            HashSet<AlgorithmIdentifier> result = new HashSet<AlgorithmIdentifier>();
+#if NET35
+            var result = new HashSetEx<AlgorithmIdentifier>();
+#else
+            var result = new HashSet<AlgorithmIdentifier>();
+#endif
 
-			foreach (var entry in digestAlgorithms)
+            foreach (var entry in digestAlgorithms)
 			{
                 result.Add(AlgorithmIdentifier.GetInstance(entry));
 			}
 
-			return CollectionUtilities.ReadOnly(result);
+			return CollectionUtilities.ReadOnly((ISet<AlgorithmIdentifier>)result);
         }
 
         /// <summary>
@@ -300,7 +304,7 @@ namespace Org.BouncyCastle.Cms
         public static CmsSignedData AddDigestAlgorithm(CmsSignedData signedData, AlgorithmIdentifier digestAlgorithm,
 			IDigestAlgorithmFinder digestAlgorithmFinder)
 		{
-			ISet<AlgorithmIdentifier> digestAlgorithms = signedData.GetDigestAlgorithmIDs();
+			var digestAlgorithms = signedData.GetDigestAlgorithmIDs();
 			AlgorithmIdentifier digestAlg = CmsSignedHelper.FixDigestAlgID(digestAlgorithm, digestAlgorithmFinder);
 
 			//
@@ -317,7 +321,11 @@ namespace Org.BouncyCastle.Cms
             //
             // build up the new set
             //
-            HashSet<AlgorithmIdentifier> digestAlgs = new HashSet<AlgorithmIdentifier>();
+#if NET35
+            var digestAlgs = new HashSetEx<AlgorithmIdentifier>();
+#else
+            var digestAlgs = new HashSet<AlgorithmIdentifier>();
+#endif
 
             foreach (var entry in digestAlgs)
 			{
@@ -390,9 +398,13 @@ namespace Org.BouncyCastle.Cms
             //
             // replace the signers in the SignedData object
             //
+#if NET35
+            ISet<AlgorithmIdentifier> digestAlgs = new HashSetEx<AlgorithmIdentifier>();
+#else
             HashSet<AlgorithmIdentifier> digestAlgs = new HashSet<AlgorithmIdentifier>();
+#endif
 
-			var signers = signerInformationStore.GetSigners();
+            var signers = signerInformationStore.GetSigners();
 			Asn1EncodableVector vec = new Asn1EncodableVector(signers.Count);
 
 			foreach (var signer in signers)

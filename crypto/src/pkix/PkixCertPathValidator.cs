@@ -107,12 +107,21 @@ namespace Org.BouncyCastle.Pkix
                 policyNodes[j] = new List<PkixPolicyNode>();
             }
 
+#if NET35
+            var policySet = new HashSetEx<string>();
+#else
             var policySet = new HashSet<string>();
+#endif
 
             policySet.Add(Rfc3280CertPathUtilities.ANY_POLICY);
 
+#if NET35
+            var validPolicyTree = new PkixPolicyNode(new List<PkixPolicyNode>(), 0, policySet, null,
+                new HashSetEx<PolicyQualifierInfo>(), Rfc3280CertPathUtilities.ANY_POLICY, false);
+#else
             var validPolicyTree = new PkixPolicyNode(new List<PkixPolicyNode>(), 0, policySet, null,
                 new HashSet<PolicyQualifierInfo>(), Rfc3280CertPathUtilities.ANY_POLICY, false);
+#endif
 
             policyNodes[0].Add(validPolicyTree);
 
@@ -324,10 +333,14 @@ namespace Org.BouncyCastle.Pkix
 
 					if (criticalExtensions1 != null)
 					{
+#if NET35
+                        criticalExtensions1 = new HashSetEx<string>(criticalExtensions1);
+#else
 						criticalExtensions1 = new HashSet<string>(criticalExtensions1);
+#endif
 
-						// these extensions are handled by the algorithm
-						criticalExtensions1.Remove(X509Extensions.KeyUsage.Id);
+                        // these extensions are handled by the algorithm
+                        criticalExtensions1.Remove(X509Extensions.KeyUsage.Id);
 						criticalExtensions1.Remove(X509Extensions.CertificatePolicies.Id);
 						criticalExtensions1.Remove(X509Extensions.PolicyMappings.Id);
 						criticalExtensions1.Remove(X509Extensions.InhibitAnyPolicy.Id);
@@ -340,11 +353,15 @@ namespace Org.BouncyCastle.Pkix
 					}
 					else
 					{
+#if NET35
+                        criticalExtensions1 = new HashSetEx<string>();
+#else
 						criticalExtensions1 = new HashSet<string>();
-					}
+#endif
+                    }
 
-					// (o)
-					Rfc3280CertPathUtilities.PrepareNextCertO(certPath, index, criticalExtensions1, certPathCheckers);
+                    // (o)
+                    Rfc3280CertPathUtilities.PrepareNextCertO(certPath, index, criticalExtensions1, certPathCheckers);
 
 					// set signing certificate for next round
                     sign = cert;
@@ -389,7 +406,11 @@ namespace Org.BouncyCastle.Pkix
 
             if (criticalExtensions != null)
             {
+#if NET35
+                criticalExtensions = new HashSetEx<string>(criticalExtensions);
+#else
                 criticalExtensions = new HashSet<string>(criticalExtensions);
+#endif
 
                 // Requires .Id
                 // these extensions are handled by the algorithm
@@ -408,7 +429,11 @@ namespace Org.BouncyCastle.Pkix
             }
             else
             {
+#if NET35
+                criticalExtensions = new HashSetEx<string>();
+#else
                 criticalExtensions = new HashSet<string>();
+#endif
             }
 
             Rfc3280CertPathUtilities.WrapupCertF(certPath, index + 1, certPathCheckers, criticalExtensions);

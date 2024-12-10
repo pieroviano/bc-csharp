@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Org.BouncyCastle.Asn1.Esf
 {
@@ -74,7 +75,11 @@ namespace Org.BouncyCastle.Asn1.Esf
 
             if (sigPolicyQualifiers != null)
 			{
-				m_sigPolicyQualifiers = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(sigPolicyQualifiers));
+				m_sigPolicyQualifiers = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(sigPolicyQualifiers
+#if NET35
+                        .Cast<Asn1Encodable>()
+#endif
+                ));
 			}
 		}
 

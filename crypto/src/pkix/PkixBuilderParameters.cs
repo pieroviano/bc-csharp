@@ -74,19 +74,23 @@ namespace Org.BouncyCastle.Pkix
 		/// <returns>the excluded certificates.</returns>
 		public virtual ISet<X509Certificate> GetExcludedCerts()
 		{
+#if NET35
+            return new HashSetEx<X509Certificate>(excludedCerts);
+#else
 			return new HashSet<X509Certificate>(excludedCerts);
-		}
+#endif
+        }
 
-		/// <summary>
-		/// Sets the excluded certificates which are not used for building a
-		/// certification path. If the <code>ISet</code> is <code>null</code> an
-		/// empty set is assumed.
-		/// </summary>
-		/// <remarks>
-		/// The given set is cloned to protect it against subsequent modifications.
-		/// </remarks>
-		/// <param name="excludedCerts">The excluded certificates to set.</param>
-		public virtual void SetExcludedCerts(ISet<X509Certificate> excludedCerts)
+        /// <summary>
+        /// Sets the excluded certificates which are not used for building a
+        /// certification path. If the <code>ISet</code> is <code>null</code> an
+        /// empty set is assumed.
+        /// </summary>
+        /// <remarks>
+        /// The given set is cloned to protect it against subsequent modifications.
+        /// </remarks>
+        /// <param name="excludedCerts">The excluded certificates to set.</param>
+        public virtual void SetExcludedCerts(ISet<X509Certificate> excludedCerts)
 		{
 			if (excludedCerts == null)
 			{

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Org.BouncyCastle.Asn1.X509;
 
 namespace Org.BouncyCastle.Asn1.Esf
@@ -47,8 +47,12 @@ namespace Org.BouncyCastle.Asn1.Esf
 			if (certificates == null)
                 throw new ArgumentNullException(nameof(certificates));
 
-            m_certificates = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(certificates));
-		}
+            m_certificates = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(certificates
+#if NET35
+                    .Cast<Asn1Encodable>()
+#endif
+            ));
+        }
 
 		public X509CertificateStructure[] GetCertificates() =>
 			m_certificates.MapElements(X509CertificateStructure.GetInstance);

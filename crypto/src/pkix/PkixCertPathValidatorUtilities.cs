@@ -289,17 +289,25 @@ namespace Org.BouncyCastle.Pkix
 			{
 				return ((X509V2AttributeCertificate)cert).SerialNumber;
 			}
-		}
+        }
 
-		//
-		// policy checking
-		//
+        //
+        // policy checking
+        //
 
+#if NET35
+        internal static HashSetEx<PolicyQualifierInfo> GetQualifierSet(Asn1Sequence qualifiers)
+#else
 		internal static HashSet<PolicyQualifierInfo> GetQualifierSet(Asn1Sequence qualifiers)
-		{
-			var pq = new HashSet<PolicyQualifierInfo>();
+#endif
+        {
+#if NET35
+            var pq = new HashSetEx<PolicyQualifierInfo>();
+#else
+            var pq = new HashSet<PolicyQualifierInfo>();
+#endif
 
-			if (qualifiers != null)
+            if (qualifiers != null)
             {
 				foreach (Asn1Encodable ae in qualifiers)
 				{
@@ -356,12 +364,17 @@ namespace Org.BouncyCastle.Pkix
 					RemovePolicyNodeRecurse(policyNodes, _child);
 				}
 			}
-		}
+        }
 
+#if NET35
+        internal static void PrepareNextCertB1(int i, IList<PkixPolicyNode>[] policyNodes, string id_p,
+            IDictionary<string, HashSetEx<string>> m_idp, X509Certificate cert)
+#else
 		internal static void PrepareNextCertB1(int i, IList<PkixPolicyNode>[] policyNodes, string id_p,
 			IDictionary<string, HashSet<string>> m_idp, X509Certificate cert)
-		{
-			foreach (var node in policyNodes[i])
+#endif
+        {
+            foreach (var node in policyNodes[i])
 			{
 				if (node.ValidPolicy.Equals(id_p))
 				{
@@ -946,17 +959,26 @@ namespace Org.BouncyCastle.Pkix
 					}
 				}
 			}
-		}
+        }
 
+#if NET35
+        internal static bool ProcessCertD1i(int index, IList<PkixPolicyNode>[] policyNodes, DerObjectIdentifier pOid,
+            HashSetEx<PolicyQualifierInfo> pq)
+#else
 		internal static bool ProcessCertD1i(int index, IList<PkixPolicyNode>[] policyNodes, DerObjectIdentifier	pOid,
 			HashSet<PolicyQualifierInfo> pq)
-		{
-			foreach (var node in policyNodes[index - 1])
+#endif
+        {
+            foreach (var node in policyNodes[index - 1])
 			{
 				if (node.ExpectedPolicies.Contains(pOid.Id))
 				{
+#if NET35
+                    var childExpectedPolicies = new HashSetEx<string>();
+#else
 					var childExpectedPolicies = new HashSet<string>();
-					childExpectedPolicies.Add(pOid.Id);
+#endif
+                    childExpectedPolicies.Add(pOid.Id);
 
                     var child = new PkixPolicyNode(new List<PkixPolicyNode>(), index, childExpectedPolicies, node, pq,
 						pOid.Id, false);
@@ -968,17 +990,26 @@ namespace Org.BouncyCastle.Pkix
 			}
 
 			return false;
-		}
+        }
 
+#if NET35
+        internal static void ProcessCertD1ii(int index, IList<PkixPolicyNode>[] policyNodes, DerObjectIdentifier _poid,
+            HashSetEx<PolicyQualifierInfo> _pq)
+#else
 		internal static void ProcessCertD1ii(int index, IList<PkixPolicyNode>[] policyNodes, DerObjectIdentifier _poid,
 			HashSet<PolicyQualifierInfo> _pq)
-		{
-			foreach (var _node in policyNodes[index - 1])
+#endif
+        {
+            foreach (var _node in policyNodes[index - 1])
 			{
 				if (ANY_POLICY.Equals(_node.ValidPolicy))
 				{
+#if NET35
+                    var _childExpectedPolicies = new HashSetEx<string>();
+#else
 					var _childExpectedPolicies = new HashSet<string>();
-					_childExpectedPolicies.Add(_poid.Id);
+#endif
+                    _childExpectedPolicies.Add(_poid.Id);
 
                     var _child = new PkixPolicyNode(new List<PkixPolicyNode>(), index, _childExpectedPolicies, _node,
 						_pq, _poid.Id, false);
@@ -1002,7 +1033,7 @@ namespace Org.BouncyCastle.Pkix
 		* @exception Exception
 		*                if an error occurs.
 		*/
-		internal static HashSet<X509Certificate> FindIssuerCerts(X509Certificate cert,
+		internal static ISet<X509Certificate> FindIssuerCerts(X509Certificate cert,
 			PkixBuilderParameters pkixBuilderParameters)
 		{
 			X509CertStoreSelector certSelector = new X509CertStoreSelector();
@@ -1016,9 +1047,13 @@ namespace Org.BouncyCastle.Pkix
 					"Subject criteria for certificate selector to find issuer certificate could not be set.", ex);
 			}
 
+#if NET35
+            var certs = new HashSetEx<X509Certificate>();
+#else
 			var certs = new HashSet<X509Certificate>();
-			try
-			{
+#endif
+            try
+            {
 				CollectionUtilities.CollectMatches(certs, certSelector, pkixBuilderParameters.GetStoresCert());
 			}
 			catch (Exception e)

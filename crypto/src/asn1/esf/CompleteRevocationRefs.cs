@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Org.BouncyCastle.Asn1.Esf
 {
@@ -45,8 +46,12 @@ namespace Org.BouncyCastle.Asn1.Esf
 			if (crlOcspRefs == null)
                 throw new ArgumentNullException(nameof(crlOcspRefs));
 
-            m_crlOcspRefs = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(crlOcspRefs));
-		}
+            m_crlOcspRefs = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(crlOcspRefs
+#if NET35
+                    .Cast<Asn1Encodable>()
+#endif
+            ));
+        }
 
 		public CrlOcspRef[] GetCrlOcspRefs() => m_crlOcspRefs.MapElements(CrlOcspRef.GetInstance);
 

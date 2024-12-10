@@ -62,7 +62,7 @@ namespace Org.BouncyCastle.Pkix
 		private int validityModel = PkixValidityModel;
 		private bool useDeltas = false;
 
-		/**
+        /**
 		 * Creates an instance of PKIXParameters with the specified Set of
 		 * most-trusted CAs. Each element of the set is a TrustAnchor.<br />
 		 * <br />
@@ -81,8 +81,8 @@ namespace Org.BouncyCastle.Pkix
 		 *                <code>java.security.cert.TrustAnchor</code>
 		 */
 		public PkixParameters(ISet<TrustAnchor> trustAnchors)
-		{
-			SetTrustAnchors(trustAnchors);
+        {
+            SetTrustAnchors(trustAnchors);
 
 			this.initialPolicies = new HashSet<string>();
 			this.m_checkers = new List<PkixCertPathChecker>();
@@ -177,19 +177,23 @@ namespace Org.BouncyCastle.Pkix
 		{
 			get { return this.date; }
 			set { this.date = value; }
-		}
+        }
 
-		// Returns a Set of the most-trusted CAs.
+        // Returns a Set of the most-trusted CAs.
 		public virtual ISet<TrustAnchor> GetTrustAnchors()
-		{
-			return new HashSet<TrustAnchor>(this.trustAnchors);
-		}
+        {
+#if NET35
+            return new HashSetEx<TrustAnchor>(this.trustAnchors);
+#else
+            return new HashSet<TrustAnchor>(this.trustAnchors);
+#endif
+        }
 
-		// Sets the set of most-trusted CAs.
-		// Set is copied to protect against subsequent modifications.
-		public virtual void SetTrustAnchors(ISet<TrustAnchor> tas)
-		{
-			if (tas == null)
+        // Sets the set of most-trusted CAs.
+        // Set is copied to protect against subsequent modifications.
+        public virtual void SetTrustAnchors(ISet<TrustAnchor> tas)
+        {
+            if (tas == null)
 				throw new ArgumentNullException(nameof(tas));
 
 			// Explicit copy to enforce type-safety
@@ -292,9 +296,9 @@ namespace Org.BouncyCastle.Pkix
 		public virtual void SetTargetConstraintsCert(ISelector<X509Certificate> targetConstraintsCert)
 		{
 			m_targetConstraintsCert = (ISelector<X509Certificate>)targetConstraintsCert?.Clone();
-		}
+        }
 
-		/**
+        /**
 		* Returns an immutable Set of initial policy identifiers (OID strings),
 		* indicating that any one of these policies would be acceptable to the
 		* certificate user for the purposes of certification path processing. The
@@ -308,15 +312,22 @@ namespace Org.BouncyCastle.Pkix
 		* @see #setInitialPolicies(java.util.Set)
 		*/
 		public virtual ISet<string> GetInitialPolicies()
-		{
-			// TODO Can it really be null?
-			if (initialPolicies == null)
+        {
+            // TODO Can it really be null?
+#if NET35
+            if (initialPolicies == null)
+                return new HashSetEx<string>();
+
+            return new HashSetEx<string>(initialPolicies);
+#else
+            if (initialPolicies == null)
 				return new HashSet<string>();
 
 			return new HashSet<string>(initialPolicies);
-		}
+#endif
+        }
 
-		/**
+        /**
 		* Sets the <code>Set</code> of initial policy identifiers (OID strings),
 		* indicating that any one of these policies would be acceptable to the
 		* certificate user for the purposes of certification path processing. By
@@ -337,9 +348,9 @@ namespace Org.BouncyCastle.Pkix
 		*
 		* @see #getInitialPolicies()
 		*/
-		public virtual void SetInitialPolicies(ISet<string> initialPolicies)
-		{
-			this.initialPolicies = new HashSet<string>();
+        public virtual void SetInitialPolicies(ISet<string> initialPolicies)
+        {
+            this.initialPolicies = new HashSet<string>();
 			if (initialPolicies != null)
 			{
 				foreach (string obj in initialPolicies)
@@ -631,9 +642,9 @@ namespace Org.BouncyCastle.Pkix
 		public virtual void SetAdditionalLocationsEnabled(bool enabled)
 		{
 			additionalLocationsEnabled = enabled;
-		}
+        }
 
-		/**
+        /**
 		* Returns the trusted attribute certificate issuers. If attribute
 		* certificates is verified the trusted AC issuers must be set.
 		* <p>
@@ -645,11 +656,15 @@ namespace Org.BouncyCastle.Pkix
 		* @return Returns an immutable set of the trusted AC issuers.
 		*/
 		public virtual ISet<TrustAnchor> GetTrustedACIssuers()
-		{
-			return new HashSet<TrustAnchor>(trustedACIssuers);
-		}
+        {
+#if NET35
+            return new HashSetEx<TrustAnchor>(trustedACIssuers);
+#else
+            return new HashSet<TrustAnchor>(trustedACIssuers);
+#endif
+        }
 
-		/**
+        /**
 		* Sets the trusted attribute certificate issuers. If attribute certificates
 		* is verified the trusted AC issuers must be set.
 		* <p>
@@ -664,7 +679,7 @@ namespace Org.BouncyCastle.Pkix
 		* @throws ClassCastException if an element of <code>stores</code> is not
 		*             a <code>TrustAnchor</code>.
 		*/
-		public virtual void SetTrustedACIssuers(ISet<TrustAnchor> trustedACIssuers)
+        public virtual void SetTrustedACIssuers(ISet<TrustAnchor> trustedACIssuers)
 		{
 			if (trustedACIssuers == null)
 			{
@@ -674,9 +689,9 @@ namespace Org.BouncyCastle.Pkix
 			{
 				this.trustedACIssuers = new HashSet<TrustAnchor>(trustedACIssuers);
 			}
-		}
+        }
 
-		/**
+        /**
 		* Returns the necessary attributes which must be contained in an attribute
 		* certificate.
 		* <p>
@@ -687,11 +702,15 @@ namespace Org.BouncyCastle.Pkix
 		* @return Returns the necessary AC attributes.
 		*/
 		public virtual ISet<string> GetNecessaryACAttributes()
-		{
-			return new HashSet<string>(necessaryACAttributes);
-		}
+        {
+#if NET35
+            return new HashSetEx<string>(necessaryACAttributes);
+#else
+            return new HashSet<string>(necessaryACAttributes);
+#endif
+        }
 
-		/**
+        /**
 		* Sets the necessary which must be contained in an attribute certificate.
 		* <p>
 		* The <code>ISet</code> must contain <code>String</code>s with the
@@ -705,7 +724,7 @@ namespace Org.BouncyCastle.Pkix
 		*             <code>necessaryACAttributes</code> is not a
 		*             <code>String</code>.
 		*/
-		public virtual void SetNecessaryACAttributes(ISet<string> necessaryACAttributes)
+        public virtual void SetNecessaryACAttributes(ISet<string> necessaryACAttributes)
 		{
 			if (necessaryACAttributes == null)
 			{
@@ -715,9 +734,9 @@ namespace Org.BouncyCastle.Pkix
 			{
 				this.necessaryACAttributes = new HashSet<string>(necessaryACAttributes);
 			}
-		}
+        }
 
-		/**
+        /**
 		* Returns the attribute certificates which are not allowed.
 		* <p>
 		* The returned <code>ISet</code> is immutable and contains
@@ -727,11 +746,15 @@ namespace Org.BouncyCastle.Pkix
 		* @return Returns the prohibited AC attributes. Is never <code>null</code>.
 		*/
 		public virtual ISet<string> GetProhibitedACAttributes()
-		{
-			return new HashSet<string>(prohibitedACAttributes);
-		}
+        {
+#if NET35
+            return new HashSetEx<string>(prohibitedACAttributes);
+#else
+            return new HashSet<string>(prohibitedACAttributes);
+#endif
+        }
 
-		/**
+        /**
 		* Sets the attribute certificates which are not allowed.
 		* <p>
 		* The <code>ISet</code> must contain <code>String</code>s with the
@@ -745,7 +768,7 @@ namespace Org.BouncyCastle.Pkix
 		*             <code>prohibitedACAttributes</code> is not a
 		*             <code>String</code>.
 		*/
-		public virtual void SetProhibitedACAttributes(ISet<string> prohibitedACAttributes)
+        public virtual void SetProhibitedACAttributes(ISet<string> prohibitedACAttributes)
 		{
 			if (prohibitedACAttributes == null)
 			{
@@ -755,9 +778,9 @@ namespace Org.BouncyCastle.Pkix
 			{
 				this.prohibitedACAttributes = new HashSet<string>(prohibitedACAttributes);
 			}
-		}
+        }
 
-		/**
+        /**
 		* Returns the attribute certificate checker. The returned set contains
 		* {@link PKIXAttrCertChecker}s and is immutable.
 		*
@@ -765,11 +788,15 @@ namespace Org.BouncyCastle.Pkix
 		*         <code>null</code>.
 		*/
 		public virtual ISet<PkixAttrCertChecker> GetAttrCertCheckers()
-		{
-			return new HashSet<PkixAttrCertChecker>(attrCertCheckers);
-		}
+        {
+#if NET35
+            return new HashSetEx<PkixAttrCertChecker>(attrCertCheckers);
+#else
+            return new HashSet<PkixAttrCertChecker>(attrCertCheckers);
+#endif
+        }
 
-		/**
+        /**
 		* Sets the attribute certificate checkers.
 		* <p>
 		* All elements in the <code>ISet</code> must a {@link PKIXAttrCertChecker}.
@@ -783,7 +810,7 @@ namespace Org.BouncyCastle.Pkix
 		* @throws ClassCastException if an element of <code>attrCertCheckers</code>
 		*             is not a <code>PKIXAttrCertChecker</code>.
 		*/
-		public virtual void SetAttrCertCheckers(ISet<PkixAttrCertChecker> attrCertCheckers)
+        public virtual void SetAttrCertCheckers(ISet<PkixAttrCertChecker> attrCertCheckers)
 		{
 			if (attrCertCheckers == null)
 			{

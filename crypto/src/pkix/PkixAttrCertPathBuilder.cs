@@ -161,7 +161,7 @@ namespace Org.BouncyCastle.Pkix
 					}
 
 					// try to get the issuer certificate from one of the stores
-					HashSet<X509Certificate> issuers;
+					ISet<X509Certificate> issuers;
 					try
 					{
 						issuers = PkixCertPathValidatorUtilities.FindIssuerCerts(tbvCert, pkixParams);

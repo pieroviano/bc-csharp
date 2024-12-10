@@ -40,8 +40,12 @@ namespace Org.BouncyCastle.Pkix
 		{
             var initialSet = FindCrls(crlSelector, paramsPkix);
 
+#if NET35
+            var finalSet = new HashSetEx<X509Crl>();
+#else
             var finalSet = new HashSet<X509Crl>();
-			DateTime validityDate = currentDate;
+#endif
+            DateTime validityDate = currentDate;
 
 			if (paramsPkix.Date != null)
 			{
@@ -69,25 +73,33 @@ namespace Org.BouncyCastle.Pkix
 			}
 
 			return finalSet;
-		}
+        }
 
-		/// <summary>
-		/// crl checking
-		/// Return a Collection of all CRLs found in the X509Store's that are
-		/// matching the crlSelect criteriums.
-		/// </summary>
-		/// <param name="crlSelector">a {@link X509CRLStoreSelector} object that will be used
-		/// to select the CRLs</param>
-		/// <param name="crlStores">a List containing only {@link org.bouncycastle.x509.X509Store
-		/// X509Store} objects. These are used to search for CRLs</param>
-		/// <returns>a Collection of all found {@link X509CRL X509CRL} objects. May be
-		/// empty but never <code>null</code>.
-		/// </returns>
+        /// <summary>
+        /// crl checking
+        /// Return a Collection of all CRLs found in the X509Store's that are
+        /// matching the crlSelect criteriums.
+        /// </summary>
+        /// <param name="crlSelector">a {@link X509CRLStoreSelector} object that will be used
+        /// to select the CRLs</param>
+        /// <param name="crlStores">a List containing only {@link org.bouncycastle.x509.X509Store
+        /// X509Store} objects. These are used to search for CRLs</param>
+        /// <returns>a Collection of all found {@link X509CRL X509CRL} objects. May be
+        /// empty but never <code>null</code>.
+        /// </returns>
+#if NET35
+        private HashSetEx<X509Crl> FindCrls(ISelector<X509Crl> crlSelector, IEnumerable<IStore<X509Crl>> crlStores)
+#else
 		private HashSet<X509Crl> FindCrls(ISelector<X509Crl> crlSelector, IEnumerable<IStore<X509Crl>> crlStores)
-		{
+#endif
+        {
+#if NET35
+            var crls = new HashSetEx<X509Crl>();
+#else
             var crls = new HashSet<X509Crl>();
+#endif
 
-			Exception lastException = null;
+            Exception lastException = null;
 			bool foundValidStore = false;
 
 			foreach (var crlStore in crlStores)

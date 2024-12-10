@@ -24890,6 +24890,21 @@
         "Name": "WshRuntime.Tests\\WshRuntime.Tests.csproj",
         "Project": "WshRuntime.Tests",
         "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.WshRuntime.Net35\\Net4x.WshRuntime.Net35.csproj",
+        "Project": "Net4x.WshRuntime.Net35",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.WshRuntimeNet40\\Net4x.WshRuntime.Net40.csproj",
+        "Project": "Net4x.WshRuntime.Net40",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.WshRuntime.NetCoreApp\\Net4x.WshRuntime.NetCoreApp.csproj",
+        "Project": "Net4x.WshRuntime.NetCoreApp",
+        "PackageReferences": null
       }
     ]
   },

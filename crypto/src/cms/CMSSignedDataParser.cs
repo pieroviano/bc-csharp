@@ -59,9 +59,13 @@ namespace Org.BouncyCastle.Cms
 		private DerObjectIdentifier		_signedContentType;
 		private CmsTypedStream          _signedContent;
 		private Dictionary<string, IDigest> m_digests;
+#if NET35
+        private HashSetEx<string> m_digestOids;
+#else
 		private HashSet<string> m_digestOids;
+#endif
 
-		private SignerInformationStore  _signerInfoStore;
+        private SignerInformationStore  _signerInfoStore;
 		private Asn1Set                 _certSet, _crlSet;
 		private bool					_isCertCrlParsed;
 
@@ -103,9 +107,13 @@ namespace Org.BouncyCastle.Cms
 				this._signedContent = signedContent;
 				this._signedData = SignedDataParser.GetInstance(this.contentInfo.GetContent(Asn1Tags.Sequence));
 				m_digests = new Dictionary<string, IDigest>(StringComparer.OrdinalIgnoreCase);
+#if NET35
+                m_digestOids = new HashSetEx<string>();
+#else
 				m_digestOids = new HashSet<string>();
+#endif
 
-				Asn1SetParser digAlgs = _signedData.GetDigestAlgorithms();
+                Asn1SetParser digAlgs = _signedData.GetDigestAlgorithms();
 				IAsn1Convertible o;
 
 				while ((o = digAlgs.ReadObject()) != null)
@@ -172,19 +180,23 @@ namespace Org.BouncyCastle.Cms
 		public int Version
 		{
 			get { return _signedData.Version.IntValueExact; }
-		}
+        }
 
 		public ISet<string> DigestOids
-		{
-			get { return new HashSet<string>(m_digestOids); }
-		}
+        {
+#if NET35
+            get { return new HashSetEx<string>(m_digestOids); }
+#else
+            get { return new HashSet<string>(m_digestOids); }
+#endif
+        }
 
-		/**
+        /**
 		* return the collection of signers that are associated with the
 		* signatures for the message.
 		* @throws CmsException
 		*/
-		public SignerInformationStore GetSignerInfos()
+        public SignerInformationStore GetSignerInfos()
 		{
 			if (_signerInfoStore == null)
 			{

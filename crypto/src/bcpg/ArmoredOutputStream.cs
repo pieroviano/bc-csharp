@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 using Org.BouncyCastle.Crypto.Utilities;
@@ -133,8 +134,13 @@ namespace Org.BouncyCastle.Bcpg
         {
             var assembly = Assembly.GetExecutingAssembly();
 
+#if NET35 || NET40
+            var titleAttr = (AssemblyTitleAttribute)assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), true).FirstOrDefault(a=>a.GetType()== typeof(AssemblyTitleAttribute));
+            var versionAttr = (AssemblyInformationalVersionAttribute)assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), true).FirstOrDefault(a => a.GetType() == typeof(AssemblyInformationalVersionAttribute));
+#else
             var titleAttr = assembly.GetCustomAttribute<AssemblyTitleAttribute>();
             var versionAttr = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+#endif
 
             if (titleAttr == null || versionAttr == null)
                 return "BouncyCastle (unknown version)";

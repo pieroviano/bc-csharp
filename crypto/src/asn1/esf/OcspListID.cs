@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Org.BouncyCastle.Asn1.Esf
 {
@@ -51,8 +52,12 @@ namespace Org.BouncyCastle.Asn1.Esf
 			if (ocspResponses == null)
                 throw new ArgumentNullException(nameof(ocspResponses));
 
-            m_ocspResponses = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(ocspResponses));
-		}
+            m_ocspResponses = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(ocspResponses
+#if NET35
+                    .Cast<Asn1Encodable>()
+#endif
+            ));
+        }
 
 		public OcspResponsesID[] GetOcspResponses() => m_ocspResponses.MapElements(OcspResponsesID.GetInstance);
 

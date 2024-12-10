@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Org.BouncyCastle.Utilities.Collections
 {
     internal abstract class ReadOnlySet<T>
-#if NETCOREAPP1_0_OR_GREATER || NET40_OR_GREATER || NETSTANDARD1_0_OR_GREATER
+#if NETCOREAPP1_0_OR_GREATER || NET35_OR_GREATER || NET40_OR_GREATER || NETSTANDARD1_0_OR_GREATER
         : ISet<T>
 #else
         : ICollection<T>, IEnumerable<T>, IEnumerable
@@ -40,7 +40,7 @@ namespace Org.BouncyCastle.Utilities.Collections
         public abstract bool Overlaps(IEnumerable<T> other);
     }
 
-#if NETCOREAPP1_0_OR_GREATER || NET40_OR_GREATER || NETSTANDARD1_0_OR_GREATER
+#if NETCOREAPP1_0_OR_GREATER || NET35_OR_GREATER || NET40_OR_GREATER || NETSTANDARD1_0_OR_GREATER
     internal class ReadOnlySetProxy<T>
         : ReadOnlySet<T>
     {

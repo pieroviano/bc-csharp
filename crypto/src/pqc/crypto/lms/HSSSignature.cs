@@ -70,7 +70,12 @@ namespace Org.BouncyCastle.Pqc.Crypto.Lms
 
         private static HssSignature Parse(int L, Stream stream, bool leaveOpen)
         {
-            using (var binaryReader = new BinaryReader(stream, Encoding.UTF8, leaveOpen))
+            using (var binaryReader = new BinaryReader(stream, Encoding.UTF8
+#if NET35 || NET40
+                   ))
+#else
+                   , leaveOpen))
+#endif
             {
                 return Parse(L, binaryReader);
             }

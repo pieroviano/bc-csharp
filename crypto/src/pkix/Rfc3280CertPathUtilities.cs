@@ -409,9 +409,13 @@ namespace Org.BouncyCastle.Pkix
 
 					if (!ANY_POLICY.Equals(pOid.Id))
 					{
+#if NET35
+                        HashSetEx<PolicyQualifierInfo> pq;
+#else
 						HashSet<PolicyQualifierInfo> pq;
-						try
-						{
+#endif
+                        try
+                        {
 							pq = PkixCertPathValidatorUtilities.GetQualifierSet(pInfo.PolicyQualifiers);
 						}
 						catch (PkixCertPathValidatorException ex)
@@ -478,8 +482,12 @@ namespace Org.BouncyCastle.Pkix
 
 									if (!_found)
 									{
+#if NET35
+                                        var _newChildExpectedPolicies = new HashSetEx<string>();
+#else
 										var _newChildExpectedPolicies = new HashSet<string>();
-										_newChildExpectedPolicies.Add(_policy);
+#endif
+                                        _newChildExpectedPolicies.Add(_policy);
 
 										var _newChild = new PkixPolicyNode(new List<PkixPolicyNode>(), i,
 											_newChildExpectedPolicies, _node, _apq, _policy, false);
@@ -979,8 +987,12 @@ namespace Org.BouncyCastle.Pkix
 
 					if (criticalExtensions != null)
 					{
+#if NET35
+                        criticalExtensions = new HashSetEx<string>(criticalExtensions);
+#else
 						criticalExtensions = new HashSet<string>(criticalExtensions);
-						criticalExtensions.Remove(X509Extensions.IssuingDistributionPoint.Id);
+#endif
+                        criticalExtensions.Remove(X509Extensions.IssuingDistributionPoint.Id);
 						criticalExtensions.Remove(X509Extensions.DeltaCrlIndicator.Id);
 
 						if (criticalExtensions.Count > 0)
@@ -992,8 +1004,12 @@ namespace Org.BouncyCastle.Pkix
 						criticalExtensions = deltaCRL.GetCriticalExtensionOids();
 						if (criticalExtensions != null)
 						{
+#if NET35
+                            criticalExtensions = new HashSetEx<string>(criticalExtensions);
+#else
 							criticalExtensions = new HashSet<string>(criticalExtensions);
-							criticalExtensions.Remove(X509Extensions.IssuingDistributionPoint.Id);
+#endif
+                            criticalExtensions.Remove(X509Extensions.IssuingDistributionPoint.Id);
 							criticalExtensions.Remove(X509Extensions.DeltaCrlIndicator.Id);
 
 							if (criticalExtensions.Count > 0)
@@ -1174,7 +1190,7 @@ namespace Org.BouncyCastle.Pkix
 			{
 				Asn1Sequence mappings = pm;
 				var m_idp = new Dictionary<string, ISet<string>>();
-				var s_idp = new HashSet<string>();
+                var s_idp = new HashSet<string>();
 
 				for (int j = 0; j < mappings.Count; j++)
 				{
@@ -1183,13 +1199,17 @@ namespace Org.BouncyCastle.Pkix
 					string sd_p = ((DerObjectIdentifier)mapping[1]).Id;
 
 					ISet<string> tmp;
-					if (m_idp.TryGetValue(id_p, out tmp))
+                    if (m_idp.TryGetValue(id_p, out tmp))
                     {
                         tmp.Add(sd_p);
                     }
 					else
                     {
+#if NET35
+                        tmp = new HashSetEx<string>();
+#else
                         tmp = new HashSet<string>();
+#endif
                         tmp.Add(sd_p);
                         m_idp[id_p] = tmp;
                         s_idp.Add(id_p);
@@ -1235,7 +1255,7 @@ namespace Org.BouncyCastle.Pkix
 
 									ISet<PolicyQualifierInfo> pq = null;
 
-									foreach (Asn1Encodable ae in policies)
+                                    foreach (Asn1Encodable ae in policies)
 									{
 										PolicyInformation pinfo = null;
 										try
@@ -1314,15 +1334,15 @@ namespace Org.BouncyCastle.Pkix
 				}
 			}
 			return _validPolicyTree;
-		}
+        }
 
 		internal static ISet<X509Crl>[] ProcessCrlA1ii(
 			DateTime		currentDate,
 			PkixParameters	paramsPKIX,
 			X509Certificate	cert,
 			X509Crl			crl)
-		{
-			X509CrlStoreSelector crlselect = new X509CrlStoreSelector();
+        {
+            X509CrlStoreSelector crlselect = new X509CrlStoreSelector();
 			crlselect.CertificateChecking = cert;
 
 			try
@@ -1338,9 +1358,13 @@ namespace Org.BouncyCastle.Pkix
 
 			crlselect.CompleteCrlEnabled = true;
 			ISet<X509Crl> completeSet = CrlUtilities.FindCrls(crlselect, paramsPKIX, currentDate);
+#if NET35
+            var deltaSet = new HashSetEx<X509Crl>();
+#else
 			var deltaSet = new HashSet<X509Crl>();
+#endif
 
-			if (paramsPKIX.IsUseDeltasEnabled)
+            if (paramsPKIX.IsUseDeltasEnabled)
 			{
 				// get delta CRL(s)
 				try
@@ -1354,16 +1378,20 @@ namespace Org.BouncyCastle.Pkix
 			}
 
 			return new ISet<X509Crl>[]{ completeSet, deltaSet };
-		}
+        }
 
-		internal static ISet<X509Crl> ProcessCrlA1i(
+        internal static ISet<X509Crl> ProcessCrlA1i(
 			DateTime		currentDate,
 			PkixParameters	paramsPKIX,
 			X509Certificate	cert,
 			X509Crl			crl)
 		{
+#if NET35
+            var deltaSet = new HashSetEx<X509Crl>();
+#else
 			var deltaSet = new HashSet<X509Crl>();
-			if (paramsPKIX.IsUseDeltasEnabled)
+#endif
+            if (paramsPKIX.IsUseDeltasEnabled)
 			{
 				CrlDistPoint freshestCRL;
 				try

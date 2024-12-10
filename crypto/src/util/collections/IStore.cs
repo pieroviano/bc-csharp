@@ -5,7 +5,11 @@ namespace Org.BouncyCastle.Utilities.Collections
 {
     /// <summary>A generic interface describing a simple store of objects.</summary>
     /// <typeparam name="T">The covariant type of stored objects.</typeparam>
+#if NET35
+    public interface IStore<T>
+#else
     public interface IStore<out T>
+#endif
     {
         /// <summary>Enumerate the (possibly empty) collection of objects matched by the given selector.</summary>
         /// <param name="selector">The <see cref="ISelector{T}"/> used to select matching objects.</param>

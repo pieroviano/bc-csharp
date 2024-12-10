@@ -137,7 +137,7 @@ namespace Org.BouncyCastle.Cms
 
         internal static Asn1Set ConvertToDLSet(ISet<AlgorithmIdentifier> digestAlgs)
         {
-			Asn1EncodableVector v = new Asn1EncodableVector(digestAlgs.Count);
+            Asn1EncodableVector v = new Asn1EncodableVector(digestAlgs.Count);
 			foreach (var digestAlg in digestAlgs)
 			{
 				v.Add(digestAlg);

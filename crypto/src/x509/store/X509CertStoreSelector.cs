@@ -24,7 +24,7 @@ namespace Org.BouncyCastle.X509.Store
 		private X509Name issuer;
 		private bool[] keyUsage;
 		private ISet<DerObjectIdentifier> policy;
-		private DateTime? privateKeyValid;
+        private DateTime? privateKeyValid;
 		private BigInteger serialNumber;
 		private X509Name subject;
 		private byte[] subjectKeyIdentifier;
@@ -91,11 +91,11 @@ namespace Org.BouncyCastle.X509.Store
 		{
 			get { return certificateValid; }
 			set { certificateValid = value; }
-		}
+        }
 
 		public ISet<DerObjectIdentifier> ExtendedKeyUsage
-		{
-			get { return CopySet(extendedKeyUsage); }
+        {
+            get { return CopySet(extendedKeyUsage); }
 			set { extendedKeyUsage = CopySet(value); }
 		}
 
@@ -115,14 +115,14 @@ namespace Org.BouncyCastle.X509.Store
 		{
 			get { return Arrays.Clone(keyUsage); }
 			set { keyUsage = Arrays.Clone(value); }
-		}
+        }
 
-		/// <summary>
-		/// An <code>ISet</code> of <code>DerObjectIdentifier</code> objects.
-		/// </summary>
+        /// <summary>
+        /// An <code>ISet</code> of <code>DerObjectIdentifier</code> objects.
+        /// </summary>
 		public ISet<DerObjectIdentifier> Policy
-		{
-			get { return CopySet(policy); }
+        {
+            get { return CopySet(policy); }
 			set { policy = CopySet(value); }
 		}
 
@@ -311,10 +311,14 @@ namespace Org.BouncyCastle.X509.Store
 
 		private static ISet<T> CopySet<T>(ISet<T> s)
 		{
-			return s == null ? null : new HashSet<T>(s);
-		}
+#if NET35
+			return s == null ? null : new HashSetEx<T>(s);
+#else
+            return s == null ? null : new HashSet<T>(s);
+#endif
+        }
 
-		private static bool MatchExtension(byte[] b, X509Certificate c, DerObjectIdentifier	oid)
+        private static bool MatchExtension(byte[] b, X509Certificate c, DerObjectIdentifier	oid)
 		{
 			if (b == null)
 				return true;

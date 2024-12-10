@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Org.BouncyCastle.Asn1.Esf
 {
@@ -45,8 +46,12 @@ namespace Org.BouncyCastle.Asn1.Esf
 			if (otherCertIDs == null)
                 throw new ArgumentNullException(nameof(otherCertIDs));
 
-            m_otherCertIDs = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(otherCertIDs));
-		}
+            m_otherCertIDs = DerSequence.FromVector(Asn1EncodableVector.FromEnumerable(otherCertIDs
+#if NET35
+                    .Cast<Asn1Encodable>()
+#endif
+            ));
+        }
 
 		public OtherCertID[] GetOtherCertIDs() => m_otherCertIDs.MapElements(OtherCertID.GetInstance);
 
